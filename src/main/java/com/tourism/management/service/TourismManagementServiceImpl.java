@@ -1,12 +1,18 @@
 package com.tourism.management.service;
 
+import java.util.Optional;
+
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
-import com.tourism.management.entity.Branch;
 import com.tourism.management.mapper.TourismManagementMapper;
 import com.tourism.management.model.BranchDetail;
+import com.tourism.management.model.TourismManagementRequest;
+import com.tourism.management.model.TourismManagementResponse;
 import com.tourism.management.repository.TourismManagementRepository;
+import com.tourism.management.repository.TourismManagementServiceClient;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -20,20 +26,54 @@ public class TourismManagementServiceImpl implements TourismManagementService {
 	@Autowired
 	TourismManagementRepository tourismManagementRepo;
 	
+	@Autowired
+	TourismManagementServiceClient tourismManagementServiceClient;
+	
+	@Autowired
+	KafkaTemplate<String, Object> kafkaTemplate;
+	
+	@Value("${kafka.topic.admin}")
+	private String kafkaTopicAdmin;
+
+	@Value("${kafka.topic.update}")
+	private String kafkaTopicUpdate;
+	
 	@Override
-	public String addPlaces(BranchDetail branchDetail) {
+	public TourismManagementResponse addPlaces(BranchDetail branchDetail) {
 	
 		log.debug(" Entering addPlaces ");
-		Branch branch = tourismManagementMapper.branchDetailsToBranch(branchDetail);
+		TourismManagementRequest tourismManagementRequest = new TourismManagementRequest();
+		tourismManagementRequest.setBranchDetail(branchDetail);
+		TourismManagementResponse tourismManagementResponse = tourismManagementServiceClient.addNewPlace(tourismManagementRequest);
 		
-		Branch branchResponse = tourismManagementRepo.insert(branch);
-		return branchResponse.toString();
+		if(isSuccessResponse(Optional.of(tourismManagementResponse))) {
+			kafkaTemplate.send(kafkaTopicAdmin, tourismManagementResponse.getBranchDetail());
+		}
+		
+		return tourismManagementResponse;
+	}
+
+	private boolean isSuccessResponse(Optional<TourismManagementResponse> tourismManagementResponseO) {
+		
+		Optional<String> statusO = tourismManagementResponseO
+				.map(TourismManagementResponse::getStatus);
+
+		return statusO.filter(status -> "SUCCESS".equals(status)).isPresent();
 	}
 
 	@Override
-	public String updateTariff(int branchId) {
-		// TODO Auto-generated method stub
-		return null;
+	public TourismManagementResponse updateTariff(BranchDetail branchDetail) {
+		
+		log.debug(" Entering updateTariff ");
+		TourismManagementRequest tourismManagementRequest = new TourismManagementRequest();
+		tourismManagementRequest.setBranchDetail(branchDetail);
+		TourismManagementResponse tourismManagementResponse = tourismManagementServiceClient.manageTariff(tourismManagementRequest);
+		
+		if(isSuccessResponse(Optional.of(tourismManagementResponse))) {
+			kafkaTemplate.send(kafkaTopicUpdate, tourismManagementResponse.getBranchDetail());
+		}
+		
+		return tourismManagementResponse;
 	}
 
 }

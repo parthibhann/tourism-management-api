@@ -1,6 +1,3 @@
-/**
- * 
- */
 package com.tourism.management.model;
 
 import java.util.List;
@@ -11,21 +8,16 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-/**
- * BranchDetails Model
- *
- */
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Data
-public class BranchDetail {
+public class TourismManagementResponse {
+	
+	private BranchDetail branchDetail;
+	private String status;
+	private String satusText;
+	private List<Messages> messages;
 
-	private String branchId;
-	private String branchName;
-	private String website;	
-	private int contactNo;	
-	private String email;
-	private List<Place> places;
 }
