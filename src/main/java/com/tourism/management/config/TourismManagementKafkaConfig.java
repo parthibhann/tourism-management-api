@@ -70,8 +70,8 @@ public class TourismManagementKafkaConfig {
 		configProps.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, kafkaBootstrapServer);
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
-		configProps.put(JsonSerializer.TYPE_MAPPINGS, "TourismManagementRequest:com.tourism.management.processor.model.TourismManagementRequest,"
-				+ "TourismManagementResponse:com.tourism.management.processor.model.TourismManagementResponse");
+		configProps.put(JsonSerializer.TYPE_MAPPINGS, "TourismManagementRequest:com.tourism.management.model.TourismManagementRequest,"
+				+ "TourismManagementResponse:com.tourism.management.model.TourismManagementResponse");
 		return new DefaultKafkaProducerFactory<>(configProps);
 	}
 

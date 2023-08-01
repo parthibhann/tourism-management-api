@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.tourism.management.model.BranchDetail;
+import com.tourism.management.model.TourismManagementRequest;
 import com.tourism.management.model.TourismManagementResponse;
 import com.tourism.management.service.TourismManagementService;
 
@@ -25,10 +25,10 @@ public class TourismManagementController  extends BaseResource{
 	
 	@PostMapping("branch")
 	public ResponseEntity<TourismManagementResponse> addBranch(
-			@Validated @RequestBody BranchDetail branchDetail) {
+			@Validated @RequestBody TourismManagementRequest tourismManagementRequest) {
 		log.info("addBranch - start");
 
-		TourismManagementResponse tourismManagementResponse = tourismManagementService.addPlaces(branchDetail);
+		TourismManagementResponse tourismManagementResponse = tourismManagementService.addPlaces(tourismManagementRequest);
 
 		return resolveResponse(tourismManagementResponse, HttpStatus.OK);
 	}

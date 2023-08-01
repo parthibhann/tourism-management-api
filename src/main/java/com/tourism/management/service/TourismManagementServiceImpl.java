@@ -39,11 +39,11 @@ public class TourismManagementServiceImpl implements TourismManagementService {
 	private String kafkaTopicUpdate;
 	
 	@Override
-	public TourismManagementResponse addPlaces(BranchDetail branchDetail) {
+	public TourismManagementResponse addPlaces(TourismManagementRequest tourismManagementRequest) {
 	
 		log.debug(" Entering addPlaces ");
-		TourismManagementRequest tourismManagementRequest = new TourismManagementRequest();
-		tourismManagementRequest.setBranchDetail(branchDetail);
+//		TourismManagementRequest tourismManagementRequest = new TourismManagementRequest();
+//		tourismManagementRequest.setBranchDetail(branchDetail);
 		TourismManagementResponse tourismManagementResponse = tourismManagementServiceClient.addNewPlace(tourismManagementRequest);
 		
 		if(isSuccessResponse(Optional.of(tourismManagementResponse))) {
