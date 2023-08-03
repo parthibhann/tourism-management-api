@@ -29,6 +29,7 @@ import org.springframework.kafka.support.mapping.Jackson2JavaTypeMapper.TypePrec
 import org.springframework.kafka.support.serializer.JsonSerializer;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.tourism.management.model.BranchDetail;
 import com.tourism.management.model.TourismManagementRequest;
 import com.tourism.management.model.TourismManagementResponse;
 
@@ -71,7 +72,8 @@ public class TourismManagementKafkaConfig {
 		configProps.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
 		configProps.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, JsonSerializer.class);
 		configProps.put(JsonSerializer.TYPE_MAPPINGS, "TourismManagementRequest:com.tourism.management.model.TourismManagementRequest,"
-				+ "TourismManagementResponse:com.tourism.management.model.TourismManagementResponse");
+				+ "TourismManagementResponse:com.tourism.management.model.TourismManagementResponse,"
+				+ "BranchDetail:com.tourism.management.model.BranchDetail");
 		return new DefaultKafkaProducerFactory<>(configProps);
 	}
 
@@ -102,6 +104,7 @@ public class TourismManagementKafkaConfig {
 	    Map<String, Class<?>> mappings = new HashMap<>();
 	    mappings.put("TourismManagementRequest", TourismManagementRequest.class);
 	    mappings.put("TourismManagementResponse", TourismManagementResponse.class);
+	    mappings.put("BranchDetail", BranchDetail.class);
 	    typeMapper.setIdClassMapping(mappings);
 	    converter.setTypeMapper(typeMapper);
 	    return converter;
